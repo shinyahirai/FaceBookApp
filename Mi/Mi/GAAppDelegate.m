@@ -12,7 +12,14 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
+    [FBSession openActiveSessionWithReadPermissions:@[@"basic_info", @"email"]
+                                       allowLoginUI:YES
+                                  completionHandler:^(FBSession *session,
+                                                      FBSessionState status,
+                                                      NSError *error) {
+                                      // Respond to session state changes,
+                                      // ex: updating the view
+                                  }];
     return YES;
 }
 							
@@ -41,6 +48,18 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication
+         annotation:(id)annotation {
+    
+    BOOL wasHandled = [FBAppCall handleOpenURL:url
+                             sourceApplication:sourceApplication];
+    
+    // add app-specific handling code here
+    return wasHandled;
 }
 
 @end

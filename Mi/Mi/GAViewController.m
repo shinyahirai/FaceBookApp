@@ -17,8 +17,28 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
-}
+    NSDictionary* object = @{
+                             @"fbsdk:create_object": @YES,
+                             @"type": @"books.book",
+                             @"title": @"Snow Crash",
+                             @"url": @"https://apps.notrepro.net/fbsdktoolkit/objects/books/Snow-Crash.html",
+                             @"image": @"http://en.wikipedia.org/wiki/File:Snowcrash.jpg",
+                             @"data": @{@"isbn": @"0553380958"}
+                             };
+    
+    id<FBOpenGraphAction> action = (id<FBOpenGraphAction>)[FBGraphObject graphObject];
+    [action setObject:object forKey:@"book"];
+    
+    [FBDialogs presentShareDialogWithOpenGraphAction:action
+                                          actionType:@"books.reads"
+                                 previewPropertyName:@"book"
+                                             handler:^(FBAppCall *call, NSDictionary *results, NSError *error) {
+                                                 if(error) {
+                                                     NSLog(@"Error: %@", error.description);
+                                                 } else {
+                                                     NSLog(@"Success!");
+                                                 }
+                                             }];}
 
 - (void)didReceiveMemoryWarning
 {
